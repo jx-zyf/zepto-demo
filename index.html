@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>zepto-demo</title>
+    <link rel="stylesheet" href="css/zepto.fullpage.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="main">
+        <div class="wrap">
+            <div class="page page1">国</div>
+            <div class="page page2">庆</div>
+            <div class="page page3">快</div>
+            <div class="page page4">乐</div>
+        </div>
+    </div>
+    <div class="music-box">
+        <span></span>
+    </div>
+    <script src="js/zepto.js"></script>
+    <script src="js/zepto.fullpage.js"></script>
+    <script>
+        function play(){
+            var audio=new Audio();
+            audio.loop=true; // 无限播放
+            audio.status='unload'; // 标识资源是否加载
+            // 加载指定资源
+            audioLoad(audio,'./media/任素汐 - 我要你.mp3',function(){
+                audio.play();
+            })
+            // 点击切换播放、暂停
+            audioPlay(audio);
+        }
+        // 加载指定资源
+        function audioLoad(audio,src,callback){
+            audio.src=src;
+            audio.addEventListener('loadstart',function(){
+                audio.status='loadding';
+            });
+            audio.addEventListener('canplay',function(){
+                audio.status='loaded';
+                callback();
+            });
+            audio.load();
+        }
+        // 点击切换播放、暂停
+        function audioPlay(audio){
+            $('.music-box').on('click',function(){
+                if(audio.paused){
+                    audio.play();
+                }else{
+                    audio.pause();
+                }
+            })
+            //audio调用play()方法播放指定资源时会触发playing事件
+            audio.addEventListener('playing',function(){
+                $('.music-box').css('background-image','url("images/music_bg.gif")')
+                .find('span').css('background-image','url("images/music-0.png")')
+                .addClass('play');
+            });
+            //audio调用pause()方法暂停播放时会触发pause事件
+            audio.addEventListener('pause',function(){
+                $('.music-box').css('background-image','')
+                .find('span').css('background-image','url("images/music-1.png")')
+                .removeClass('play');
+            });
+        }
+
+        $(function(){
+            $('.wrap').fullpage({
+                dir:'v',        // 切换方向：默认是v(纵向)，h(横向)
+                loop:true,      // 是否循环
+                start:0,        // 从第几页开始展示(默认是0：第一页)
+                page:'.page',   // 拿谁展示(默认是class=page)
+                duration:500    // 每页切换时间(默认500ms),css也要同步修改
+            });
+            play();
+        })
+    </script>
+</body>
+</html>
