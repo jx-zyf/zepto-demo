@@ -27,10 +27,8 @@
             var audio=new Audio();
             audio.loop=true; // 无限播放
             audio.status='unload'; // 标识资源是否加载
-            // 加载指定资源
-            audioLoad(audio,'./media/任素汐 - 我要你.mp3',function(){
-                audio.play();
-            })
+            // 开始播放
+            playAudio(audio);
             // 点击切换播放、暂停
             audioPlay(audio);
         }
@@ -45,6 +43,15 @@
                 callback();
             });
             audio.load();
+        }
+        // 开始播放
+        function playAudio(audio){
+            if(audio.status!=='loaded'){
+                audioLoad(audio,'./media/任素汐 - 我要你.mp3',function(){
+                    playAudio(audio);
+                })
+            }
+            audio.play();
         }
         // 点击切换播放、暂停
         function audioPlay(audio){
